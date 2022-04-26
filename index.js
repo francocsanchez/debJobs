@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 require('./config/db');
 
 const express = require('express');
-const exphbs = require('express-handlebars').create({ defaultLayout: 'layout' });
+const exphbs = require('express-handlebars').create({ defaultLayout: 'layout', helpers: require('./helpers/handlebars') });
 const path = require('path');
 const cookieParse = require('cookie-parser');
 const session = require('express-session');
