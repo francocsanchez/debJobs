@@ -4,11 +4,15 @@
   "description": "Portal de empleos",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./index"
+    "desarrollo": "concurrently \"npm run dev \" \"npm run watch \" ",
+    "dev": "nodemon ./index.js",
+    "start": "node ./index.js",
+    "watch": "webpack --watch --mode development"
   },
   "author": "Panchez",
   "license": "ISC",
   "dependencies": {
+    "concurrently": "^7.1.0",
     "connect-mongo": "^4.6.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.0",
@@ -20,6 +24,11 @@
     "slug": "^5.3.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "@babel/core": "^7.17.9",
+    "@babel/preset-env": "^7.16.11",
+    "babel-loader": "^8.2.5",
+    "nodemon": "^2.0.15",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2"
   }
 }
