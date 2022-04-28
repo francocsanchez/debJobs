@@ -42,3 +42,15 @@ exports.editFormVacante = async (req, res, next) => {
         tagline: `#id: ${vacante._id}`,
     })
 }
+
+exports.updateVacante = async (req, res) => {
+    const updateVacante = req.body;
+    updateVacante.skills = req.body.skills.split(',');
+
+    const vacante = await Vacante.findOneAndUpdate({ url: req.params.url }, updateVacante, {
+        new: true,
+        runValidators: true
+    });
+
+    res.redirect(`/vacantes/${vacante.url}`);
+}
