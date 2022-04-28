@@ -4,11 +4,14 @@ require('./config/db');
 const express = require('express');
 const exphbs = require('express-handlebars').create({ defaultLayout: 'layout', helpers: require('./helpers/handlebars') });
 const path = require('path');
+const bodyParse = require('body-parser');
 const cookieParse = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 
 const app = express();
+app.use(bodyParse.json());
+app.use(bodyParse.urlencoded({ extended: true }));
 
 require('dotenv').config({ path: 'variables.env' });
 
