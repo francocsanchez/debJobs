@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Vacante = mongoose.model('Vacante');
 
 exports.listJobs = async (req, res) => {
-    const vacantes = await Vacante.find({}).lean();
+    const vacantes = await Vacante.find({}).lean(); // Use lean() for data json
     console.log(vacantes);
     res.render('home', {
         nombrePagina: 'DevJobs',
