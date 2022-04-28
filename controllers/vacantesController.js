@@ -10,7 +10,10 @@ exports.nuevaVacante = (req, res) => {
 
 exports.addVacante = async (req, res) => {
     const vacante = new Vacante(req.body);
+
     const skillsVacante = req.body.skills.split(',');
+    vacante.skills = skillsVacante;
+
     const nuevaVacante = await vacante.save();
 
     res.redirect(`/vacantes/${nuevaVacante.url}`);
