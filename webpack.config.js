@@ -4,7 +4,7 @@ const webpack = require('webpack');
 module.exports = {
     entry: './public/js/app.js',
     output: {
-        filename: 'bunfle.js',
+        filename: 'bundle.js',
         path: path.join(__dirname, './public/dist')
     },
     module: {
