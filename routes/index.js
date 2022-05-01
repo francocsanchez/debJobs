@@ -15,6 +15,7 @@ module.exports = () => {
     router.post('/vacantes/edit/:url', vacantesController.updateVacante);
 
     router.get('/users/crear-cuenta', userController.formCrearCuenta);
+    router.post('/users/crear-cuenta', userController.crearCuenta);
 
     return router;
 }
