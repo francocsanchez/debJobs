@@ -1,5 +1,26 @@
 const express = require('express');
 const router = express.Router()
+const { body } = require('express-validator');
+const mongoose = require('mongoose');
+const Usuario = mongoose.model('Usuario');
+
+const validationUser = [
+    body('name').notEmpty().withMessage('El campo nombre no debe estar vacío'),
+    body('email').notEmpty().withMessage('El campo email no debe estar vacío'),
+    body('email').custom(email => {
+        return Usuario.findOne({ email: email }).then(user => {
+            if (user) {
+                return Promise.reject('E-mail ya existe');
+            }
+        });
+    }),
+    body('password').notEmpty().withMessage('El campo password no debe estar vacío'),
+    body('password2').notEmpty().withMessage('El campo comfirmar password no debe estar vacío'),
+    body('password2').custom((value, { req }) => {
+        if (value !== req.body.password) { throw new Error('Los password no coinciden'); }
+        return true;
+    }),
+];
 
 const homeController = require('../controllers/homeController');
 const vacantesController = require('../controllers/vacantesController');
@@ -15,7 +36,7 @@ module.exports = () => {
     router.post('/vacantes/edit/:url', vacantesController.updateVacante);
 
     router.get('/users/crear-cuenta', userController.formCrearCuenta);
-    router.post('/users/crear-cuenta', userController.crearCuenta);
+    router.post('/users/crear-cuenta', validationUser, userController.crearCuenta);
 
     return router;
 }
