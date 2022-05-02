@@ -34,4 +34,11 @@ usuariosSchema.pre('save', async function (next) {
     next();
 })
 
+usuariosSchema.post('save', function (error, doc, next) {
+    if (error.name === 'MongoServerError' && error.code === 1100) {
+        next('Ese email ya existe');
+    } else {
+        next(error);
+    }
+})
 module.exports = mongoose.model('Usuario', usuariosSchema);

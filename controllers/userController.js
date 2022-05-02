@@ -22,9 +22,11 @@ exports.crearCuenta = async (req, res) => {
     }
 
     const user = new Usuario(req.body)
-    const newUser = await user.save();
-
-    if (!newUser) return next();
-
-    res.redirect('/users/inicar-sesion');
+    try {
+        const newUser = await user.save();
+        res.redirect('/users/inicar-sesion');
+    } catch (error) {
+        req.flash('error', error)
+        res.redirect('/users/crear-cuenta')
+    }
 }
