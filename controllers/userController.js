@@ -30,3 +30,9 @@ exports.crearCuenta = async (req, res) => {
         res.redirect('/users/crear-cuenta')
     }
 }
+
+exports.iniciarSesion = (req, res) => {
+    res.render('users/iniciarSesion', {
+        nombrePagina: 'Iniciar sesion en devJobs'
+    });
+}
