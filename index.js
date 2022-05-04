@@ -9,6 +9,7 @@ const cookieParse = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
+const passport = require('./config/passport');
 
 const app = express();
 app.use(bodyParse.json());
@@ -28,6 +29,9 @@ app.use(session({
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.DATABASE }),
 }))
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(flash());
 app.use((req, res, next) => {

@@ -25,6 +25,7 @@ const validationUser = [
 const homeController = require('../controllers/homeController');
 const vacantesController = require('../controllers/vacantesController');
 const userController = require('../controllers/userController');
+const authController = require('../controllers/authController');
 
 module.exports = () => {
     router.get('/', homeController.listJobs);
@@ -38,6 +39,7 @@ module.exports = () => {
     router.get('/users/crear-cuenta', userController.formCrearCuenta);
     router.post('/users/crear-cuenta', validationUser, userController.crearCuenta);
     router.get('/users/iniciar-sesion', userController.iniciarSesion);
+    router.post('/users/iniciar-sesion', authController.autenticarUsuario);
 
     return router;
 }
