@@ -11,6 +11,8 @@ exports.nuevaVacante = (req, res) => {
 exports.addVacante = async (req, res) => {
     const vacante = new Vacante(req.body);
 
+    vacante.author = req.user._id;
+
     const skillsVacante = req.body.skills.split(',');
     vacante.skills = skillsVacante;
 

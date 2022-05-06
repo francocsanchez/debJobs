@@ -7,12 +7,11 @@ exports.autenticarUsuario = passport.authenticate('local', {
     badRequestMessage: 'Ambos campos son obligatorios'
 })
 
-exports.verificarUsuario = (req,res,next) => {
-    if(req.authenticate()){
-        return next()
+exports.verificarUsuario = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next();
     }
-
-    res.redirect('/users/iniciar-sesion')
+    return res.redirect('/users/iniciar-sesion')
 }
 
 exports.showPanel = (req, res) => {

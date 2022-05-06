@@ -26,7 +26,7 @@ passport.use(new LocalStrategy(
 
 passport.serializeUser((usuario, done) => done(null, usuario._id));
 passport.deserializeUser(async (id, done) => {
-    const usuario = Usuario.findById(id).exec();
+    const usuario = await Usuario.findById(id).exec();
     return done(null, usuario);
 })
 

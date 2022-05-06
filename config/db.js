@@ -8,5 +8,5 @@ mongoose.connection.on('error', (error) => {
 })
 
 //Import models
-require('../models/Vacantes');
 require('../models/Usuarios');
+require('../models/Vacantes');
