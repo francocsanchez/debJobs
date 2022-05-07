@@ -5,7 +5,7 @@ const { validationResult } = require('express-validator');
 exports.formCrearCuenta = (req, res) => {
     res.render('users/crearCuenta', {
         nombrePagina: 'Crear tu cuenta',
-        tagline: 'Comienza a publicar tus vacantes gratis'
+        tagline: 'Comienza a publicar tus vacantes gratis',
     });
 }
 
@@ -40,7 +40,9 @@ exports.iniciarSesion = (req, res) => {
 exports.formEditProfile = (req, res) => {
     res.render('users/editProfile', {
         nombrePagina: 'Edita tu perfil de DevJobs',
-        user: req.user.toObject()
+        user: req.user.toObject(),
+        cerrarSesion: true,
+        userName: req.user.name,
     })
 }
 

@@ -5,6 +5,8 @@ exports.nuevaVacante = (req, res) => {
     res.render('vacantes/nuevaVacante', {
         nombrePagina: 'Nueva vacante',
         tagline: 'Completa el formulario',
+        cerrarSesion: true,
+        userName: req.user.name,
     })
 }
 
@@ -42,6 +44,8 @@ exports.editFormVacante = async (req, res, next) => {
         vacante,
         nombrePagina: `Editar - ${vacante.title}`,
         tagline: `#id: ${vacante._id}`,
+        cerrarSesion: true,
+        userName: req.user.name,
     })
 }
 
