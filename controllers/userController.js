@@ -36,3 +36,25 @@ exports.iniciarSesion = (req, res) => {
         nombrePagina: 'Iniciar sesion en devJobs'
     });
 }
+
+exports.formEditProfile = (req, res) => {
+    res.render('users/editProfile', {
+        nombrePagina: 'Edita tu perfil de DevJobs',
+        user: req.user.toObject()
+    })
+}
+
+exports.editProfile = async (req, res) => {
+    const user = await Usuario.findById(req.user._id);
+
+    user.name = req.body.name;
+    user.email = req.body.email;
+
+    if (req.body.password) { user.password = req.body.password }
+
+    await user.save();
+
+    req.flash('correcto', 'Datos guardados correctamente');
+
+    res.redirect('/users/panel')
+}
