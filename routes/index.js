@@ -23,16 +23,21 @@ const validationUser = [
 ];
 
 const validationVacantes = [
-    body('name').notEmpty().trim().escape().withMessage('El titulo nombre no debe estar vacío'),
-    body('company').notEmpty().trim().escape().withMessage('El empresa nombre no debe estar vacío'),
-    body('location').notEmpty().trim().escape().withMessage('El ubicacion nombre no debe estar vacío'),
+    body('name').notEmpty().trim().escape().withMessage('El campo titulo no debe estar vacío'),
+    body('company').notEmpty().trim().escape().withMessage('El campo empresa no debe estar vacío'),
+    body('location').notEmpty().trim().escape().withMessage('El campo ubicacion no debe estar vacío'),
     body('salary').custom(salary => {
         if (!isNaN(salary)) {
             if (salary < 0) { throw new Error('El valor del salario no puede ser menor a 0') }
         } else { throw new Error('El campo salario solo admite numeros') }
         return true;
     }),
-    body('contract').notEmpty().trim().escape().withMessage('El ubicacion nombre no debe estar vacío'),
+    body('contract').notEmpty().trim().escape().withMessage('El campo ubicacion no debe estar vacío'),
+]
+
+const validationProfile = [
+    body('name').notEmpty().trim().escape().withMessage('El campo nombre no debe estar vacío'),
+    body('email').notEmpty().trim().escape().withMessage('El campo email no debe estar vacío'),
 ]
 
 const homeController = require('../controllers/homeController');
@@ -58,7 +63,7 @@ module.exports = () => {
     router.post('/users/iniciar-sesion', authController.autenticarUsuario);
 
     router.get('/users/edit-profile', authController.verificarUsuario, userController.formEditProfile)
-    router.post('/users/edit-profile', authController.verificarUsuario, userController.editProfile)
+    router.post('/users/edit-profile', authController.verificarUsuario,  validationProfile ,userController.editProfile)
 
     return router;
 }
