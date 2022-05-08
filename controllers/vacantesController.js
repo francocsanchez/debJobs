@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Vacante = mongoose.model('Vacante');
+const { validationResult } = require('express-validator');
 
 exports.nuevaVacante = (req, res) => {
     if (req.session) {
@@ -16,6 +17,19 @@ exports.nuevaVacante = (req, res) => {
 }
 
 exports.addVacante = async (req, res) => {
+    const validation = validationResult(req);
+
+    if (validation.errors.length > 0) {
+        req.flash('error', validation.errors.map(error => error.msg));
+        return res.render('vacantes/nuevaVacante', {
+            nombrePagina: 'Nueva vacante',
+            tagline: 'Completa el formulario',
+            mensajes: req.flash(),
+            cerrarSesion: true,
+            userName: req.user.name,
+        });
+    }
+
     const vacante = new Vacante(req.body);
 
     vacante.author = req.user._id;

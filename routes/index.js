@@ -22,6 +22,19 @@ const validationUser = [
     }),
 ];
 
+const validationVacantes = [
+    body('name').notEmpty().trim().escape().withMessage('El titulo nombre no debe estar vacío'),
+    body('company').notEmpty().trim().escape().withMessage('El empresa nombre no debe estar vacío'),
+    body('location').notEmpty().trim().escape().withMessage('El ubicacion nombre no debe estar vacío'),
+    body('salary').custom(salary => {
+        if (!isNaN(salary)) {
+            if (salary < 0) { throw new Error('El valor del salario no puede ser menor a 0') }
+        } else { throw new Error('El campo salario solo admite numeros') }
+        return true;
+    }),
+    body('contract').notEmpty().trim().escape().withMessage('El ubicacion nombre no debe estar vacío'),
+]
+
 const homeController = require('../controllers/homeController');
 const vacantesController = require('../controllers/vacantesController');
 const userController = require('../controllers/userController');
@@ -31,14 +44,14 @@ module.exports = () => {
     router.get('/', homeController.listJobs);
 
     router.get('/vacantes/nueva', authController.verificarUsuario, vacantesController.nuevaVacante);
-    router.post('/vacantes/nueva', authController.verificarUsuario, vacantesController.addVacante);
+    router.post('/vacantes/nueva', authController.verificarUsuario, validationVacantes, vacantesController.addVacante);
     router.get('/vacantes/:url', vacantesController.showVacante);
     router.get('/vacantes/edit/:url', authController.verificarUsuario, vacantesController.editFormVacante);
-    router.post('/vacantes/edit/:url', authController.verificarUsuario, vacantesController.updateVacante);
+    router.post('/vacantes/edit/:url', authController.verificarUsuario, validationVacantes, vacantesController.updateVacante);
 
     router.get('/users/panel', authController.verificarUsuario, authController.showPanel);
 
-    router.get('/users/cerrar-sesion',authController.verificarUsuario, authController.cerrarSesion);
+    router.get('/users/cerrar-sesion', authController.verificarUsuario, authController.cerrarSesion);
     router.get('/users/crear-cuenta', userController.formCrearCuenta);
     router.post('/users/crear-cuenta', validationUser, userController.crearCuenta);
     router.get('/users/iniciar-sesion', userController.iniciarSesion);
