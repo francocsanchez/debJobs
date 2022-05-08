@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Vacante = mongoose.model('Vacante');
 
 exports.nuevaVacante = (req, res) => {
+    if (req.session) {
+        req.session.cookie.maxAge = 0
+        delete req.session
+    }
+    console.log(req.session);
     res.render('vacantes/nuevaVacante', {
         nombrePagina: 'Nueva vacante',
         tagline: 'Completa el formulario',

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Vacante = mongoose.model('Vacante');
 
 exports.autenticarUsuario = passport.authenticate('local', {
-    successRedirect: '/ok',
+    successRedirect: '/users/panel',
     failureRedirect: '/users/iniciar-sesion',
     failureFlash: true,
     badRequestMessage: 'Ambos campos son obligatorios'
@@ -25,4 +25,10 @@ exports.showPanel = async (req, res) => {
         userName: req.user.name,
         vacantes
     })
+}
+
+exports.cerrarSesion = (req, res) => {
+    req.logout();
+    req.flash('correcto', 'Cerraste Sesión Correctamente');
+    return res.redirect('/');
 }
