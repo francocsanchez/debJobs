@@ -79,3 +79,18 @@ exports.updateVacante = async (req, res) => {
 
     res.redirect(`/vacantes/${vacante.url}`);
 }
+
+exports.deleteVacante = async (req, res) => {
+    const { id } = req.params;
+
+    const vacante = await Vacante.findById(id);
+
+    console.log(vacante);
+
+    if (vacante.author.equals(req.user._id)) {
+        vacante.remove();
+        res.status(200).send('Vacante eliminada correctamente')
+    } else {
+        res.status(403).send('Error')
+    }
+}

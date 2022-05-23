@@ -53,6 +53,7 @@ module.exports = () => {
     router.get('/vacantes/:url', vacantesController.showVacante);
     router.get('/vacantes/edit/:url', authController.verificarUsuario, vacantesController.editFormVacante);
     router.post('/vacantes/edit/:url', authController.verificarUsuario, validationVacantes, vacantesController.updateVacante);
+    router.delete('/vacantes/eliminar/:id', vacantesController.deleteVacante);
 
     router.get('/users/panel', authController.verificarUsuario, authController.showPanel);
 
@@ -63,7 +64,7 @@ module.exports = () => {
     router.post('/users/iniciar-sesion', authController.autenticarUsuario);
 
     router.get('/users/edit-profile', authController.verificarUsuario, userController.formEditProfile)
-    router.post('/users/edit-profile', authController.verificarUsuario,  validationProfile ,userController.editProfile)
+    router.post('/users/edit-profile', authController.verificarUsuario, validationProfile, userController.editProfile)
 
     return router;
 }
