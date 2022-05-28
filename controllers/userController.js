@@ -54,6 +54,8 @@ exports.editProfile = async (req, res) => {
 
     if (req.body.password) { user.password = req.body.password }
 
+    if (req.file) { user.imgProfile = req.file.filename }
+
     await user.save();
 
     req.flash('correcto', 'Datos guardados correctamente');

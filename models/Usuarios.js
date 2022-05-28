@@ -20,7 +20,8 @@ const usuariosSchema = new mongoose.Schema({
         required: true
     },
     token: String,
-    expira: Date
+    expira: Date,
+    imgProfile: String
 });
 
 usuariosSchema.pre('save', async function (next) {

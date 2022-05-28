@@ -3,7 +3,31 @@ const router = express.Router()
 const { body } = require('express-validator');
 const mongoose = require('mongoose');
 const Usuario = mongoose.model('Usuario');
+const multer = require('multer');
+const path = require('path');
+const shortid = require('shortid');
 
+
+//Config multer
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, '../public/img/imgProfile'))
+    },
+    filename: (req, file, cb) => {
+        const newFileName = shortid.generate() + path.extname(file.originalname);
+        cb(null, newFileName)
+    }
+})
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        cb(null, true)
+    } else { cb(null, false) }
+}
+const limits = { fileSize: 100000 }
+
+const upload = multer({ storage, fileFilter, limits });
+
+//Validaciones
 const validationUser = [
     body('name').notEmpty().withMessage('El campo nombre no debe estar vacío'),
     body('email').notEmpty().withMessage('El campo email no debe estar vacío'),
@@ -40,11 +64,13 @@ const validationProfile = [
     body('email').notEmpty().trim().escape().withMessage('El campo email no debe estar vacío'),
 ]
 
+//Controladores
 const homeController = require('../controllers/homeController');
 const vacantesController = require('../controllers/vacantesController');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
 
+//Rutas
 module.exports = () => {
     router.get('/', homeController.listJobs);
 
@@ -64,7 +90,7 @@ module.exports = () => {
     router.post('/users/iniciar-sesion', authController.autenticarUsuario);
 
     router.get('/users/edit-profile', authController.verificarUsuario, userController.formEditProfile)
-    router.post('/users/edit-profile', authController.verificarUsuario, validationProfile, userController.editProfile)
+    router.post('/users/edit-profile', authController.verificarUsuario, validationProfile, upload.single('imgProfile'), userController.editProfile)
 
     return router;
 }
