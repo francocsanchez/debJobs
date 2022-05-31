@@ -41,6 +41,7 @@ exports.formEditProfile = (req, res) => {
     res.render('users/editProfile', {
         nombrePagina: 'Edita tu perfil de DevJobs',
         user: req.user.toObject(),
+        imgProfile: req.user.imgProfile,
         cerrarSesion: true,
         userName: req.user.name,
     })
@@ -56,11 +57,12 @@ exports.editProfile = async (req, res) => {
             user: req.user.toObject(),
             cerrarSesion: true,
             userName: req.user.name,
+            imgProfile: req.user.imgProfile,
             mensajes: req.flash()
         });
     }
     const user = await Usuario.findById(req.user._id);
-    
+
     user.name = req.body.name;
     user.email = req.body.email;
 

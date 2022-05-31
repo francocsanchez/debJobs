@@ -76,7 +76,7 @@ const validationProfile = [
     body('imgProfile').custom((value, { req }) => {
         const file = req.file;
 
-        if(file.size > 100000){
+        if (file.size > 300000) {
             fs.unlinkSync(file.path);
             return Promise.reject('Imagen muy grande');
         }

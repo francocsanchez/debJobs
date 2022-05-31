@@ -12,6 +12,7 @@ exports.nuevaVacante = (req, res) => {
         tagline: 'Completa el formulario',
         cerrarSesion: true,
         userName: req.user.name,
+        imgProfile: req.user.imgProfile,
     })
 }
 
@@ -26,6 +27,7 @@ exports.addVacante = async (req, res) => {
             mensajes: req.flash(),
             cerrarSesion: true,
             userName: req.user.name,
+            imgProfile: req.user.imgProfile,
         });
     }
 
@@ -42,7 +44,7 @@ exports.addVacante = async (req, res) => {
 }
 
 exports.showVacante = async (req, res, next) => {
-    const vacante = await Vacante.findOne({ url: req.params.url }).lean();
+    const vacante = await Vacante.findOne({ url: req.params.url }).lean().populate('author');
 
     if (!vacante) return next();
 
@@ -64,6 +66,7 @@ exports.editFormVacante = async (req, res, next) => {
         tagline: `#id: ${vacante._id}`,
         cerrarSesion: true,
         userName: req.user.name,
+        imgProfile: req.user.imgProfile,
     })
 }
 
