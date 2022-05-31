@@ -47,8 +47,20 @@ exports.formEditProfile = (req, res) => {
 }
 
 exports.editProfile = async (req, res) => {
-    const user = await Usuario.findById(req.user._id);
+    const validation = validationResult(req);
 
+    if (validation.errors.length > 0) {
+        req.flash('error', validation.errors.map(error => error.msg));
+        return res.render('users/editProfile', {
+            nombrePagina: 'Edita tu perfil de DevJobs',
+            user: req.user.toObject(),
+            cerrarSesion: true,
+            userName: req.user.name,
+            mensajes: req.flash()
+        });
+    }
+    const user = await Usuario.findById(req.user._id);
+    
     user.name = req.body.name;
     user.email = req.body.email;
 

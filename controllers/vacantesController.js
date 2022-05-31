@@ -7,7 +7,6 @@ exports.nuevaVacante = (req, res) => {
         req.session.cookie.maxAge = 0
         delete req.session
     }
-    console.log(req.session);
     res.render('vacantes/nuevaVacante', {
         nombrePagina: 'Nueva vacante',
         tagline: 'Completa el formulario',
@@ -84,8 +83,6 @@ exports.deleteVacante = async (req, res) => {
     const { id } = req.params;
 
     const vacante = await Vacante.findById(id);
-
-    console.log(vacante);
 
     if (vacante.author.equals(req.user._id)) {
         vacante.remove();

@@ -6,9 +6,16 @@ const Usuario = mongoose.model('Usuario');
 const multer = require('multer');
 const path = require('path');
 const shortid = require('shortid');
-
+const fs = require('fs');
 
 //Config multer
+const configMulter = {
+    fileFilter(req, file, cb) {
+        if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+            cb(null, true)
+        } else { cb(null, false) }
+    }
+}
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, path.join(__dirname, '../public/img/imgProfile'))
@@ -18,14 +25,8 @@ const storage = multer.diskStorage({
         cb(null, newFileName)
     }
 })
-const fileFilter = (req, file, cb) => {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-        cb(null, true)
-    } else { cb(null, false) }
-}
-const limits = { fileSize: 100000 }
 
-const upload = multer({ storage, fileFilter, limits });
+const upload = multer({ storage, configMulter });
 
 //Validaciones
 const validationUser = [
@@ -60,8 +61,27 @@ const validationVacantes = [
 ]
 
 const validationProfile = [
-    body('name').notEmpty().trim().escape().withMessage('El campo nombre no debe estar vacío'),
-    body('email').notEmpty().trim().escape().withMessage('El campo email no debe estar vacío'),
+    body('name').notEmpty().trim().escape().withMessage('El campo titulo no debe estar vacío'),
+    body('email').notEmpty().withMessage('El campo email no debe estar vacío'),
+    body('email').custom((email, { req }) => {
+        const myEmail = req.user.email;
+        return Usuario.findOne({ email: email }).then(user => {
+            if (myEmail === user.email) {
+                return true;
+            } else if (user) {
+                return Promise.reject('E-mail ya existe');
+            }
+        });
+    }),
+    body('imgProfile').custom((value, { req }) => {
+        const file = req.file;
+
+        if(file.size > 100000){
+            fs.unlinkSync(file.path);
+            return Promise.reject('Imagen muy grande');
+        }
+        return true;
+    })
 ]
 
 //Controladores
@@ -90,7 +110,7 @@ module.exports = () => {
     router.post('/users/iniciar-sesion', authController.autenticarUsuario);
 
     router.get('/users/edit-profile', authController.verificarUsuario, userController.formEditProfile)
-    router.post('/users/edit-profile', authController.verificarUsuario, validationProfile, upload.single('imgProfile'), userController.editProfile)
+    router.post('/users/edit-profile', authController.verificarUsuario, upload.single('imgProfile'), validationProfile, userController.editProfile)
 
     return router;
 }
