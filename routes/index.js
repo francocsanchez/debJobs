@@ -101,6 +101,7 @@ module.exports = () => {
     router.get('/vacantes/edit/:url', authController.verificarUsuario, vacantesController.editFormVacante);
     router.post('/vacantes/edit/:url', authController.verificarUsuario, validationVacantes, vacantesController.updateVacante);
     router.delete('/vacantes/eliminar/:id', vacantesController.deleteVacante);
+    router.get('/vacantes/candidatos/:id', vacantesController.showCandidatos)
 
     router.get('/users/panel', authController.verificarUsuario, authController.showPanel);
 
