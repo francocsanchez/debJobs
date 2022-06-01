@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Vacante = mongoose.model('Vacante');
 const { validationResult } = require('express-validator');
+const multer = require('multer')
+const shortid = require('shortid')
 
 exports.nuevaVacante = (req, res) => {
     if (req.session) {
@@ -93,4 +95,65 @@ exports.deleteVacante = async (req, res) => {
     } else {
         res.status(403).send('Error')
     }
+}
+
+exports.subirCV = (req, res, next) => {
+    upload(req, res, function (error) {
+        if (error) {
+            if (error instanceof multer.MulterError) {
+                if (error.code === 'LIMIT_FILE_SIZE') {
+                    req.flash('error', 'El archivo es muy grande: Máximo 100kb ');
+                } else {
+                    req.flash('error', error.message);
+                }
+            } else {
+                req.flash('error', error.message);
+            }
+            res.redirect('back');
+            return;
+        } else {
+            return next();
+        }
+    });
+}
+
+const configuracionMulter = {
+    limits: { fileSize: 100000 },
+    storage: fileStorage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, __dirname + '../../public/cv');
+        },
+        filename: (req, file, cb) => {
+            const extension = file.mimetype.split('/')[1];
+            cb(null, `${shortid.generate()}.${extension}`);
+        }
+    }),
+    fileFilter(req, file, cb) {
+        if (file.mimetype === 'application/pdf') {
+            // el callback se ejecuta como true o false : true cuando la imagen se acepta
+            cb(null, true);
+        } else {
+            cb(new Error('Formato No Válido'));
+        }
+    }
+}
+
+const upload = multer(configuracionMulter).single('cv');
+
+exports.contactar = async (req, res, next) => {
+    const vacante = await Vacante.findOne({ url: req.params.url });
+
+    if (!vacante) { return next() };
+
+    const nuevoCandidato = {
+        name: req.body.name,
+        email: req.body.email,
+        cv: req.file.filename
+    }
+
+    vacante.candidates.push(nuevoCandidato);
+    await vacante.save()
+
+    req.flash('correcto', 'Se envio tu cv correctamente');
+    res.redirect('/');
 }

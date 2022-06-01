@@ -92,11 +92,12 @@ const authController = require('../controllers/authController');
 
 //Rutas
 module.exports = () => {
-    router.get('/', homeController.listJobs);
+    router.get('/', homeController.listJobs); 
 
     router.get('/vacantes/nueva', authController.verificarUsuario, vacantesController.nuevaVacante);
     router.post('/vacantes/nueva', authController.verificarUsuario, validationVacantes, vacantesController.addVacante);
     router.get('/vacantes/:url', vacantesController.showVacante);
+    router.post('/vacantes/:url',vacantesController.subirCV ,vacantesController.contactar);
     router.get('/vacantes/edit/:url', authController.verificarUsuario, vacantesController.editFormVacante);
     router.post('/vacantes/edit/:url', authController.verificarUsuario, validationVacantes, vacantesController.updateVacante);
     router.delete('/vacantes/eliminar/:id', vacantesController.deleteVacante);
