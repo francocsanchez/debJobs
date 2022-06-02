@@ -101,7 +101,7 @@ module.exports = () => {
     router.get('/vacantes/edit/:url', authController.verificarUsuario, vacantesController.editFormVacante);
     router.post('/vacantes/edit/:url', authController.verificarUsuario, validationVacantes, vacantesController.updateVacante);
     router.delete('/vacantes/eliminar/:id', vacantesController.deleteVacante);
-    router.get('/vacantes/candidatos/:id', vacantesController.showCandidatos)
+    router.get('/vacantes/candidatos/:id', vacantesController.showCandidatos);
 
     router.get('/users/panel', authController.verificarUsuario, authController.showPanel);
 
@@ -110,6 +110,11 @@ module.exports = () => {
     router.post('/users/crear-cuenta', validationUser, userController.crearCuenta);
     router.get('/users/iniciar-sesion', userController.iniciarSesion);
     router.post('/users/iniciar-sesion', authController.autenticarUsuario);
+    router.get('/users/reset-password', authController.formReestablecerPassword);
+    router.post('/users/reset-password', authController.sendToken);
+    router.get('/users/reset-password/:token', authController.validarToken);
+    router.post('/users/reset-password/:token', authController.guardarPassword);
+
 
     router.get('/users/edit-profile', authController.verificarUsuario, userController.formEditProfile)
     router.post('/users/edit-profile', authController.verificarUsuario, upload.single('imgProfile'), validationProfile, userController.editProfile)
