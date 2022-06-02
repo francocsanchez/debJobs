@@ -9,6 +9,7 @@ const cookieParse = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
+const createErrors = require('http-errors');
 const passport = require('./config/passport');
 
 const app = express();
@@ -41,5 +42,17 @@ app.use((req, res, next) => {
 
 const router = require('./routes/index');
 app.use('/', router());
+
+app.use((req,res,next) => {
+    next(createErrors(404,'No encontrado'))
+})
+
+app.use((error,req,res,next) => {
+    res.locals.mensaje = error.message;
+    const status = error.status || 500;
+    res.locals.status = status;
+    res.status(status)
+    res.render('error');
+})
 
 app.listen(process.env.PORT);
